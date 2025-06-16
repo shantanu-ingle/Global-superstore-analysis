@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import io
 
 
 st.set_page_config(layout="wide")
@@ -71,3 +72,18 @@ with col4:
 st.subheader("📦 Most Returned Products")
 returned_products = filtered_df[filtered_df['Returned'] == 1]['Product Name'].value_counts().head(10)
 st.bar_chart(returned_products)
+
+st.subheader("📤 Download Filtered Data")
+
+# Convert DataFrame to CSV in memory
+buffer = io.StringIO()
+filtered_df.to_csv(buffer, index=False)
+csv_data = buffer.getvalue()
+
+# Download button
+st.download_button(
+    label="⬇️ Download CSV",
+    data=csv_data,
+    file_name="filtered_orders.csv",
+    mime="text/csv"
+)
