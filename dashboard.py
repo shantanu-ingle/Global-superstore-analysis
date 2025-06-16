@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+
 st.set_page_config(layout="wide")
 
 # Load data
@@ -15,6 +16,19 @@ region = st.sidebar.multiselect("Select Region", options=df["Region"].unique(), 
 category = st.sidebar.multiselect("Select Category", options=df["Category"].unique(), default=df["Category"].unique())
 
 filtered_df = df[(df["Region"].isin(region)) & (df["Category"].isin(category))]
+
+# ---- KPIs ----
+total_sales = filtered_df["Sales"].sum()
+total_profit = filtered_df["Profit"].sum()
+total_orders = filtered_df["Order ID"].nunique()
+return_rate = filtered_df["Returned"].mean() * 100
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("💰 Total Sales", f"₹{total_sales:,.0f}")
+col2.metric("📈 Total Profit", f"₹{total_profit:,.0f}")
+col3.metric("🧾 Total Orders", f"{total_orders:,}")
+col4.metric("🔁 Return Rate", f"{return_rate:.2f} %")
 
 # Dashboard Title
 st.title("🧮 Retail Data Dashboard")
